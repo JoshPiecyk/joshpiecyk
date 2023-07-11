@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        background-color: #fefae0; /* Cream/beige color */
+        font-family: "Your Unique Serif Font", serif;
+      }
+
+      #square {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-color: #ccd5ae;
+        top: calc(50% - 25px); /* Position square in the center of the screen */
+        left: calc(50% - 25px);
+        border-radius: 10px; /* Rounded corners */
+      }
+
+      .object {
+        position: absolute;
+        width: 20px;
+        height: 10px;
+        background-color: #d4a373;
+        transform-origin: center;
+        transform: rotate(0deg); /* Initial rotation */
+        transition: transform 0.2s ease-in-out;
+        z-index: -1; /* Set a lower z-index to appear behind the name */
+      }
+
+      #signature {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.5);
+        font-size: 60px;
+        font-family: "Times New Roman", serif;
+        color: #faedcd; /* Slightly darker color */
+        opacity: 0;
+        animation: fadeInAndGrow 10s ease-in forwards;
+        z-index: 1; /* Set a higher z-index to appear on top of the rectangles */
+      }
+
+      @keyframes fadeInAndGrow {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.5);
+        }
+        100% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="square"></div>
+    <div id="signature">Made by Josh Piecyk</div>
+    <script src="script.js"></script>
+  </body>
+</html>
