@@ -1,61 +1,170 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <style>
-      body {
-        background-color: #fefae0; /* Cream/beige color */
-        font-family: "Your Unique Serif Font", serif;
-      }
+<head>
+  <title>Funflusion</title>
+  <meta property="og:image" content="https://www.nasa.gov/sites/default/files/thumbnails/image/stsci-01h1cv2fh3kw1w8a4zvq6mdhht.png">
+  <meta property="og:title" content="Funflusion">
+  <meta property="og:description" content="Check out Funflusion!">
+  <style> 
+    body {
+      margin: 0; 
+      padding: 0;
+      overflow: hidden;
+    }
 
-      #square {
-        position: absolute;
-        width: 50px;
-        height: 50px;
-        background-color: #ccd5ae;
-        top: calc(50% - 25px); /* Position square in the center of the screen */
-        left: calc(50% - 25px);
-        border-radius: 10px; /* Rounded corners */
-      }
+    #controls-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.5);
+      font-family: "Courier New", Courier, monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
 
-      .object {
-        position: absolute;
-        width: 20px;
-        height: 10px;
-        background-color: #d4a373;
-        transform-origin: center;
-        transform: rotate(0deg); /* Initial rotation */
-        transition: transform 0.2s ease-in-out;
-        z-index: -1; /* Set a lower z-index to appear behind the name */
-      }
+    #resetButton {
+      display: block;
+      margin-bottom: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
-      #signature {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0.5);
-        font-size: 60px;
-        font-family: "Times New Roman", serif;
-        color: #faedcd; /* Slightly darker color */
-        opacity: 0;
-        animation: fadeInAndGrow 10s ease-in forwards;
-        z-index: 1; /* Set a higher z-index to appear on top of the rectangles */
-      }
+    .slider-container {
+      display: flex;
+      align-items: center;
+    }
 
-      @keyframes fadeInAndGrow {
-        0% {
-          opacity: 0;
-          transform: translate(-50%, -50%) scale(0.5);
-        }
-        100% {
-          opacity: 1;
-          transform: translate(-50%, -50%) scale(1);
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="square"></div>
-    <div id="signature">Made by Josh Piecyk</div>
-    <script src="script.js"></script>
-  </body>
+    #circleSizeSlider {
+      width: 100%;
+      margin-left: 10px;
+      background-color: #fcba03; /* Change slider color to yellow */
+    }
+
+    .toggle-switch-container {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .toggle-switch input[type="checkbox"] {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-switch-label {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 60px;
+      height: 34px;
+      background-color: #ccc;
+      border-radius: 34px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .toggle-switch-label::after {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background-color: #fff;
+      top: 4px;
+      left: 4px;
+      transition: transform 0.3s ease;
+    }
+
+    .toggle-switch-input:checked + .toggle-switch-label {
+      background-color: #6dd36d;
+    }
+
+    .toggle-switch-input:checked + .toggle-switch-label::after {
+      transform: translateX(26px);
+    }
+
+    .toggle-switch-label-text {
+      font-style: italic; /* Change to italics */
+      color: #fcba03; /* Change color to yellow */
+      margin-left: 10px;
+    }
+
+    #gravityText {
+      margin-top: 10px;
+      white-space: pre-wrap;
+      /* This line increases the width of the white box by 50 pixels */
+      max-width: calc(50% + 50px);
+    }
+
+    canvas {
+      display: block;
+      border: 1px solid #000;
+      background: url('https://www.nasa.gov/sites/default/files/thumbnails/image/stsci-01h1cv2fh3kw1w8a4zvq6mdhht.png') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    #createdByText {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 16px;
+      font-weight: bold;
+      color: #fcba03;
+      opacity: 1;
+    }
+
+    #shapes-container {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.circle {
+  border-radius: 50%;
+}
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <div id="controls-container">
+    <div id="resetButton">RESET</div>
+    <div class="slider-container">
+      <label for="circleSizeSlider">Ball Size:</label>
+      <input type="range" id="circleSizeSlider" min="5" max="20" step="1" value="10">
+    </div>
+    <div class="toggle-switch-container">
+      <div class="toggle-switch">
+        <input type="checkbox" id="randomizeToggle">
+        <label class="toggle-switch-label" for="randomizeToggle"></label>
+      </div>
+      <span class="toggle-switch-label-text">Randomize!</span>
+    </div>
+  </div>
+
+  <div id="createdByText">CREATED BY JOSH PIECYK</div>
+
+  <div id="shapes-container">
+    <div class="shape circle"></div>
+    <div class="shape square"></div>
+    <div class="shape triangle"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
 </html>
